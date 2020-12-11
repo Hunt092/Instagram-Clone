@@ -1,0 +1,12 @@
+.posts{
+    padding:20px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
+.posts__right{
+    margin-right: 20px;
+
+}
