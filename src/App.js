@@ -40,7 +40,7 @@ function App() {
         <Route path='/'>
           <Header/>
           <Posts currentUser={user}/>
-          {user ? <ImageUpload username={user}/> : <></> }
+          {user ? <ImageUpload/> : <></> }
         </Route>
   
         </Switch>

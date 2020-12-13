@@ -4,11 +4,12 @@ import Button from '@material-ui/core/Button'
 import {storage} from '../Firebase'
 import db from'../Firebase'
 import firebase from'firebase'
+import { useStateValue } from './StateProvider'
 
 
 
-const ImageUpload = (username) => {
-
+const ImageUpload = () => {
+    const [{user},dispatch] = useStateValue();
     const [caption ,setCaption] = useState('')
     const [image, setImage] = useState(null)
     const [progress, setProgress] = useState(0)
@@ -40,15 +41,15 @@ const ImageUpload = (username) => {
             () => {
                 //complete function ...
 
-                console.log(username)
 
                 storage.ref('images').child(image.name).getDownloadURL().then(url => {
                     //post image inside the db
+                    console.log(url);
                     db.collection('posts').add({
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         caption: caption,
                         imageUrl: url,
-                        username: username.displayname
+                        username: user.displayName
                     })
                     setProgress(0)
                     setCaption('')
