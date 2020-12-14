@@ -26,7 +26,7 @@ const Posts = () => {
                 {
                     posts.map(({ id, post })=>(
                         <Post id={id} user={user} 
-                        username={post.username} userImg={post.userimg} caption={post.caption} imageUrl={post.imageUrl} />
+                        username={post.username} userImg={post.userimg} caption={post.caption} imageUrl={post.imageUrl} email={post.useremail} />
                     ))
                 }
             </div>

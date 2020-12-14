@@ -25,8 +25,6 @@ const ImageUpload = () => {
         }
     }
 
-    console.log(user);
-
     const handleUpload = () => {
         setActive(true)
         const uploadTask = storage.ref(`images/${image.name}`).put(image)
@@ -57,6 +55,7 @@ const ImageUpload = () => {
                         imageUrl: url,
                         username: user.displayName,
                         userimg : user.photoURL,
+                        useremail: user.email,
                     })
                     setProgress(0)
                     setCaption('')
