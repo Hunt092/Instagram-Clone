@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import './ImageUpload.css'
 import Button from '@material-ui/core/Button'
 import {storage} from '../Firebase'
@@ -9,21 +9,28 @@ import { useStateValue } from './StateProvider'
 
 
 const ImageUpload = () => {
-    const [{user},dispatch] = useStateValue();
+    const [{user, toUpload},dispatch] = useStateValue();
     const [caption ,setCaption] = useState('')
     const [image, setImage] = useState(null)
     const [progress, setProgress] = useState(0)
+    const [active , setActive] = useState(false);
+
 
     const handleChange = (e)=>{
         if(e.target.files[0]){
             setImage(e.target.files[0])
         }
+        else{
+            setImage(null)
+        }
     }
 
+    console.log(user);
 
     const handleUpload = () => {
+        setActive(true)
         const uploadTask = storage.ref(`images/${image.name}`).put(image)
-
+        
         uploadTask.on(
             'state_changed',
             (snapshot) => {
@@ -44,29 +51,37 @@ const ImageUpload = () => {
 
                 storage.ref('images').child(image.name).getDownloadURL().then(url => {
                     //post image inside the db
-                    console.log(url);
                     db.collection('posts').add({
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                         caption: caption,
                         imageUrl: url,
-                        username: user.displayName
+                        username: user.displayName,
+                        userimg : user.photoURL,
                     })
                     setProgress(0)
                     setCaption('')
                     setImage(null)
+                    dispatch({
+                        type: "UPLOAD_CHECK",
+                        state: false
+                    })
                 })
             }
         )
     }
+    useEffect(() => {
+      
+    }, [image])
 
     return (
         <div className="imageupload">
-            <progress className="imageupload__progress" value={progress} max='100'/>
+            {active && <progress className="imageupload__progress" value={progress} max='100'/>}
 
-            <input type='text' value={caption} onChange={(e) => setCaption(e.target.value)} placeholder="Enter a caption"/>
+            <input className='imageupload__caption' type='textarea' value={caption} onChange={(e) => setCaption(e.target.value)} maxLength={250} placeholder="Enter a caption"/>
 
-            <input type="file" onChange={handleChange}/>
-            <Button onClick={handleUpload}>Upload</Button>
+            <input className='imageupload__file' type="file" onChange={handleChange} required/>
+            {image ? <Button onClick={handleUpload}>Upload</Button> : " "
+}
         </div>
     )
 }

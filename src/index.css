@@ -1,6 +1,9 @@
 *{
   margin:0
 }
+*:focus{
+  outline-style: none;
+}
 
 body {
   margin: 0;

@@ -1,5 +1,6 @@
 export const initalState = {
-    user: null
+    user: null,
+    toUpload: false,
 }
 
 const reducer = (state , action) =>{
@@ -9,7 +10,8 @@ const reducer = (state , action) =>{
                 ...state,
                 user:action.user
             }
-           
+        case "UPLOAD_CHECK":
+            return{...state,toUpload: action.state}
     
         default:
             return state;
